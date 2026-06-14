@@ -1,0 +1,31 @@
+Şahzadə Qülləsi Layihəsi daxili test sənədidir.
+
+Bu sənəddə yazılan məlumatlar real dünyaya aid deyil. Məqsəd RAG sisteminin cavabı modelin öz yaddaşından yox, sənədin içindən tapıb verməsini yoxlamaqdır.
+
+Şahzadə Qülləsi 2026-cı ildə hazırlanmış lokal süni intellekt test layihəsidir. Layihənin əsas məqsədi sənəd əsaslı sual-cavab sistemini yoxlamaqdır.
+
+Layihənin gizli kod adı “Mavi Qapı”dır. Bu kod adı yalnız bu test sənədində qeyd olunur.
+
+Şahzadə Qülləsi layihəsinin əsas rəhbəri Elvin Rəhimli adlı uydurma bir şəxsdir. Texniki köməkçi isə Nərmin Qasımova kimi qeyd olunub.
+
+Layihədə üç əsas modul var: sənəd oxuma modulu, parça axtarış modulu və cavab yaratma modulu.
+
+Sənəd oxuma modulu TXT fayllarını oxuyur. Parça axtarış modulu istifadəçi sualına ən yaxın mətni tapır. Cavab yaratma modulu tapılan mətnə əsasən cavab hazırlayır.
+
+Layihənin test parolu “ALFA-27” olaraq qeyd olunub. Bu parol real təhlükəsizlik parolu deyil, sadəcə RAG testi üçün yaradılıb.
+
+Layihənin xüsusi test rəngi “tünd bənövşəyi” seçilib. Bu rəng istifadəçi interfeysi üçün nəzərdə tutulmayıb, sadəcə sənəd içində axtarış testi üçündür.
+
+Layihənin ilk sınaq sualı belədir: “Şahzadə Qülləsinin gizli kod adı nədir?”
+
+Bu sualın cavabı “Mavi Qapı” olmalıdır.
+
+İkinci sınaq sualı belədir: “Layihənin test parolu nədir?”
+
+Bu sualın cavabı “ALFA-27” olmalıdır.
+
+Üçüncü sınaq sualı belədir: “Layihədə neçə əsas modul var?”
+
+Bu sualın cavabı üç əsas modul olmalıdır: sənəd oxuma modulu, parça axtarış modulu və cavab yaratma modulu.
+
+Bu sənədin əsas məqsədi RAG sisteminin sənəddən məlumat tapmasını yoxlamaqdır. Əgər sistem bu cavabları düzgün verirsə, deməli retrieval hissəsi işləyir.
