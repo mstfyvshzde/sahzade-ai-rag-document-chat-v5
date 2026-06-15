@@ -1,84 +1,110 @@
-# Sahzade AI Feedback Evaluator V4
+# Sahzade AI RAG Document Chat V5
 
-A lightweight feedback and evaluation tool for the Sahzade AI local assistant.
+A basic local Retrieval-Augmented Generation experiment for document question answering.
 
 ## Overview
 
-Sahzade AI Feedback Evaluator V4 is the fourth step of the Sahzade AI project.
+Sahzade AI RAG Document Chat V5 is the fifth step of the Sahzade AI project.
 
-In earlier versions, the assistant was fine-tuned, served through a local API, and connected to a simple chat interface.
-In V4, the focus is on evaluating assistant responses and identifying weak response patterns.
+In earlier versions, the assistant was fine-tuned, served through a local API, connected to a chat interface, and evaluated with feedback labels.
+In V5, the focus is on adding a simple document-based question-answering system.
 
-The goal of this project is to create a simple feedback workflow that helps improve the assistant over time.
+The goal of this project is to understand the core idea of RAG: searching relevant information from a document before answering a user question.
+
+## What is RAG?
+
+RAG means Retrieval-Augmented Generation.
+
+Simple idea:
+
+```text
+Search first, answer second.
+```
+
+Instead of relying only on the model’s general knowledge, the system first searches inside a local document and then uses the retrieved information to answer the question.
 
 ## Project Goals
 
-* Read saved chat logs from the local assistant API
-* Show user and assistant messages one by one
-* Allow manual feedback labeling
-* Save feedback results in JSONL format
-* Generate a simple evaluation report
-* Detect common response problems
-* Prepare better data for future improvements
+* Read a local text document
+* Split the document into smaller chunks
+* Create a simple searchable index
+* Retrieve the most relevant chunks for a user question
+* Select an answer from the retrieved text
+* Save RAG test results
+* Understand the basic workflow before adding advanced RAG features
 
 ## What This Version Includes
 
-* Chat log reader
-* Manual response evaluator
-* Feedback label system
-* Feedback result saving
-* Evaluation report generator
-* Local JSONL-based workflow
-* Simple terminal-based usage
+* TXT document loading
+* Document chunking
+* Chunk overlap
+* Simple keyword-based index
+* Cosine similarity search
+* Top-k retrieval
+* Basic answer selection
+* Terminal-based RAG chat
+* Saved RAG results
 
 ## What This Version Does Not Include
 
-* Automatic AI-based grading
-* Web interface
-* Database storage
-* Model retraining
-* Production monitoring
-* Advanced analytics dashboard
+* PDF support
+* Real embedding models
+* Vector databases
+* LLM-based answer generation
+* FastAPI endpoint
+* Frontend integration
+* Source citation UI
+* Production deployment
 
 These features can be added in later versions.
 
-## Feedback Labels
-
-The evaluator supports these labels:
+## RAG Flow
 
 ```text
-good
-bad
-generic
-wrong_language
-unnatural
-wrong_intent
-repetitive
+User question
+    ↓
+Load document chunks
+    ↓
+Search for relevant chunks
+    ↓
+Retrieve top matching text
+    ↓
+Select the best answer sentence
+    ↓
+Return answer
 ```
-
-These labels help identify whether an assistant response is useful, natural, relevant, and consistent with the expected style.
 
 ## Project Structure
 
 ```text
-sahzade-ai-feedback-evaluator-v4/
+sahzade-ai-rag-document-chat-v5/
 │
 ├── data/
-│   ├── input/
-│   │   └── chat_logs.jsonl
+│   ├── documents/
+│   │   └── sample_document.txt
 │   │
-│   └── output/
-│       ├── feedback_results.jsonl
-│       └── evaluation_report.json
-│
-├── scripts/
-│   ├── copy_logs.sh
-│   └── run_evaluator.sh
+│   ├── chunks/
+│   │   └── chunks.jsonl
+│   │
+│   └── index/
+│       └── vector_index.json
 │
 ├── src/
 │   ├── config.py
-│   ├── evaluator.py
-│   └── report.py
+│   ├── document_loader.py
+│   ├── chunker.py
+│   ├── retriever.py
+│   └── rag_chat.py
+│
+├── scripts/
+│   ├── build_index.sh
+│   └── run_rag_chat.sh
+│
+├── tests/
+│   └── test_questions.txt
+│
+├── outputs/
+│   └── rag_results.txt
 │
 ├── README.md
 ├── requirements.txt
@@ -87,125 +113,111 @@ sahzade-ai-feedback-evaluator-v4/
 
 ## Main Components
 
-### `src/config.py`
+### `src/document_loader.py`
 
-Stores project paths and available feedback labels.
-
-Main responsibilities:
-
-* Define input and output paths
-* Define chat log path
-* Define feedback result path
-* Define evaluation report path
-* Store feedback label options
-
-### `src/evaluator.py`
-
-Reads chat logs and allows manual feedback labeling.
+Loads the local text document and prints a short preview.
 
 Main responsibilities:
 
-* Load `chat_logs.jsonl`
-* Show each conversation sample
-* Ask the evaluator to choose a feedback label
-* Optionally collect a short note
-* Save feedback into `feedback_results.jsonl`
+* Check whether the document exists
+* Read the document content
+* Show basic document information
+* Print a short preview for testing
 
-Example feedback result:
+### `src/chunker.py`
 
-```json
-{
-  "evaluated_at": "2026-06-12T17:45:00",
-  "time": "2026-06-12T17:35:08",
-  "user_message": "ok",
-  "assistant_response": "Əla, buradayam.",
-  "feedback": "generic",
-  "note": "Acceptable but repeated too often."
-}
-```
-
-### `src/report.py`
-
-Reads feedback results and creates a summary report.
+Splits the source document into smaller text chunks.
 
 Main responsibilities:
 
-* Count feedback labels
-* Calculate good response rate
-* Count issue responses
-* Save the evaluation report
-* Print a summary in the terminal
+* Read the document
+* Split text into chunks
+* Add chunk IDs
+* Save chunks into `chunks.jsonl`
 
-Example report structure:
+### `src/retriever.py`
 
-```json
-{
-  "total_evaluated": 10,
-  "good_count": 5,
-  "issue_count": 5,
-  "good_rate_percent": 50.0,
-  "label_counts": {
-    "good": 5,
-    "generic": 3,
-    "wrong_language": 1,
-    "unnatural": 1
-  }
-}
-```
+Builds a simple searchable index and retrieves relevant chunks.
+
+Main responsibilities:
+
+* Tokenize chunk text
+* Create word-count vectors
+* Save a basic vector index
+* Compare user questions with document chunks
+* Return the most relevant chunks
+
+### `src/rag_chat.py`
+
+Runs the terminal-based RAG chat.
+
+Main responsibilities:
+
+* Receive user questions
+* Search the document index
+* Select a possible answer
+* Print the answer in the terminal
+* Save test results into `outputs/rag_results.txt`
 
 ## How to Run
 
-### 1. Copy chat logs
+### 1. Build the index
 
 ```bash
-chmod +x scripts/copy_logs.sh
-./scripts/copy_logs.sh
+chmod +x scripts/build_index.sh
+./scripts/build_index.sh
 ```
 
-### 2. Start the evaluator
+### 2. Start the RAG chat
 
 ```bash
-chmod +x scripts/run_evaluator.sh
-./scripts/run_evaluator.sh
+chmod +x scripts/run_rag_chat.sh
+./scripts/run_rag_chat.sh
 ```
 
-### 3. Check output files
-
-Feedback results:
+### 3. Check saved results
 
 ```text
-data/output/feedback_results.jsonl
+outputs/rag_results.txt
 ```
 
-Evaluation report:
+## Example Use Case
+
+A local document contains private or project-specific information.
+
+The user asks:
 
 ```text
-data/output/evaluation_report.json
+What is the test password?
 ```
+
+The system searches the document and returns the answer based on the retrieved text.
 
 ## Why This Project Matters
 
-Fine-tuning and building an assistant is not enough by itself.
+A useful AI assistant should not only generate text from memory.
 
-A useful AI assistant also needs:
+It should also be able to:
 
-* response testing
-* quality evaluation
-* feedback collection
-* weak pattern detection
-* better data for future training
+* search documents
+* use external knowledge
+* answer based on provided context
+* reduce unsupported guesses
+* prepare for future document chat features
 
-This project adds the first simple evaluation layer to the Sahzade AI system.
+This project adds the first simple RAG layer to the Sahzade AI system.
 
 ## Future Improvements
 
-* Add more detailed feedback labels
-* Add better reporting
-* Add automatic issue detection
-* Add a small dashboard
-* Connect feedback results to future dataset improvement
-* Use feedback data for later fine-tuning experiments
+* Add real embedding models
+* Add PDF support
+* Add source citations
+* Add FastAPI endpoint
+* Connect RAG to the chat UI
+* Add vector database support
+* Combine RAG with the local LLM assistant
+* Improve answer generation quality
 
 ## Project Status
 
-Completed as V4 feedback evaluation experiment.
+Completed as V5 basic RAG experiment.
